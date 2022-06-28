@@ -42,6 +42,7 @@ class SynonymsWidget extends WidgetBase {
       '#title' => $this->t('Synonyms'),
       '#default_value' => implode("\n", $value),
       '#description' => $this->t('Enter one synonym per line.'),
+      '#element_validate' => [[$this, 'validate'],],
     ];
     return $widget;
   }
@@ -85,6 +86,16 @@ class SynonymsWidget extends WidgetBase {
       }
     }
     $items->setValue($value);
+  }
+
+  /**
+   * Validates if the synonyms' field is longer than 255 characters.
+   */
+  public function validate($element, FormStateInterface $form_state) {
+
+    if (strlen($element['#value']) > 255) {
+      $form_state->setError($element, $this->t('The synonyms field value must not exceed a length of 255 characters.'));
+    }
   }
 
 }
